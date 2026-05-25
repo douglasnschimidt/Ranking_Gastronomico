@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+<title>Ranking Gastronômico 🧀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Barlow+Condensed:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap"/>
+<style>
+  /* ── Reset & Variables ───────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #130B00;
+    --bg2:       #1E1000;
+    --bg3:       #2C1600;
+    --border:    #3E2208;
+    --border2:   #5A3410;
+    --gold:      #E8A020;
+    --gold2:     #C47A10;
+    --cream:     #FFF3DC;
+    --muted:     #9A7A50;
+    --muted2:    #6A5030;
+    --red:       #C4401A;
+    --green:     #4A8A5A;
+    --font-disp: 'Playfair Display', Georgia, serif;
+    --font-cond: 'Barlow Condensed', sans-serif;
+    --font-body: 'Lora', Georgia, serif;
+    --radius:    14px;
+    --max:       480px;
+  }
+
+  html { background: var(--bg); }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--cream);
+    min-height: 100vh;
+    max-width: var(--max);
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ── Header ──────────────────────────────────────────── */
+  header {
+    background: linear-gradient(160deg, #3D1A00 0%, #1A0800 100%);
+    padding: 22px 20px 18px;
+    border-bottom: 2px solid var(--border2);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-eyebrow {
+    font-family: var(--font-cond);
+    font-size: 11px; letter-spacing: .25em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 2px;
+  }
+  .header-title {
+    font-family: var(--font-disp);
+    font-size: 26px; line-height: 1.1;
+    color: var(--cream);
+  }
+  .header-sub {
+    font-size: 13px; color: var(--muted);
+    font-style: italic; margin-top: 3px;
+  }
+  #saving-indicator {
+    position: absolute; top: 18px; right: 18px;
+    font-family: var(--font-cond); font-size: 10px;
+    letter-spacing: .12em; color: var(--gold);
+    display: none;
+  }
+  #saving-indicator.show { display: block; }
+
+  /* ── Nav ─────────────────────────────────────────────── */
+  nav {
+    display: flex; background: #0E0700;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 84px; z-index: 99;
+  }
+  nav button {
+    flex: 1; padding: 13px 8px;
+    background: transparent; border: none;
+    font-family: var(--font-cond); font-size: 12px;
+    letter-spacing: .15em; text-transform: uppercase;
+    color: var(--muted2); cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+  }
+  nav button.active {
+    color: var(--gold); background: var(--bg3);
+    border-bottom-color: var(--gold);
+  }
+
+  /* ── Setup banner ────────────────────────────────────── */
+  #setup-banner {
+    background: linear-gradient(135deg, #3A1A00, #2A1000);
+    border: 1px solid var(--gold2);
+    border-radius: var(--radius);
+    padding: 16px 18px; margin: 16px;
+    font-size: 14px; line-height: 1.6;
+  }
+  #setup-banner strong { color: var(--gold); }
+  #url-input-wrap { display: flex; gap: 8px; margin-top: 10px; }
+  #script-url-input {
+    flex: 1; background: var(--bg3);
+    border: 1px solid var(--border2); border-radius: 8px;
+    padding: 9px 12px; color: var(--cream);
+    font-family: var(--font-body); font-size: 13px;
+    outline: none;
+  }
+  #save-url-btn {
+    background: var(--gold2); color: #1A0800;
+    border: none; border-radius: 8px;
+    padding: 9px 14px; cursor: pointer;
+    font-family: var(--font-cond); font-weight: 700;
+    font-size: 12px; letter-spacing: .1em; white-space: nowrap;
+  }
+
+  /* ── Views ───────────────────────────────────────────── */
+  .view { display: none; padding: 0 0 80px; }
+  .view.active { display: block; }
+
+  /* ── Form ────────────────────────────────────────────── */
+  .form-wrap { padding: 18px 16px; }
+  .section-title {
+    font-family: var(--font-disp); font-size: 20px;
+    margin-bottom: 18px; color: var(--cream);
+  }
+  .form-group { margin-bottom: 16px; }
+  label.field-label {
+    display: block;
+    font-family: var(--font-cond); font-size: 10px;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 5px;
+  }
+  label.field-label span.req { color: var(--gold); }
+  input[type=text], select, textarea {
+    width: 100%;
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 11px 13px;
+    color: var(--cream); font-family: var(--font-body);
+    font-size: 15px; outline: none;
+    transition: border-color .2s;
+  }
+  input[type=text]:focus, select:focus, textarea:focus {
+    border-color: var(--gold2);
+  }
+  select { appearance: none; }
+  textarea { min-height: 0; resize: none; }
+
+  /* Star rating */
+  .stars-row {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .star-group { margin-bottom: 14px; }
+  .star-group-label {
+    font-family: var(--font-cond); font-size: 11px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .stars { display: flex; gap: 3px; }
+  .star {
+    font-size: 28px; cursor: pointer;
+    color: var(--border2);
+    transition: color .1s, transform .1s;
+    line-height: 1; user-select: none;
+  }
+  .star.on  { color: var(--gold); }
+  .star:hover { transform: scale(1.15); }
+
+  .stars-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 16px;
+  }
+
+  /* Add item inline */
+  .add-item-row {
+    display: flex; gap: 8px; margin-top: 8px;
+  }
+  .add-item-row input {
+    flex: 1; font-size: 14px; padding: 9px 12px;
+  }
+  .add-item-row button {
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 10px; color: var(--gold);
+    font-family: var(--font-cond); font-size: 12px;
+    letter-spacing: .1em; cursor: pointer;
+    padding: 9px 13px; white-space: nowrap;
+  }
+
+  /* Submit button */
+  .btn-primary {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, #C4601A, #8B3A0A);
+    color: var(--cream); border: none;
+    border-radius: 12px; cursor: pointer;
+    font-family: var(--font-cond); font-size: 15px;
+    font-weight: 700; letter-spacing: .15em;
+    text-transform: uppercase;
+    transition: opacity .2s;
+  }
+  .btn-primary:disabled { opacity: .5; cursor: default; }
+
+  .form-error {
+    color: #E86040; font-size: 13px;
+    font-style: italic; margin-bottom: 12px;
+  }
+  .form-success {
+    color: #6ABA7A; font-size: 14px;
+    font-style: italic; margin-bottom: 12px;
+    background: #0A2A12; border: 1px solid #2A5A30;
+    border-radius: 8px; padding: 10px 14px;
+  }
+
+  /* ── Ranking view ────────────────────────────────────── */
+  .ranking-wrap { padding: 14px 16px 0; }
+  .filters-row {
+    display: flex; gap: 8px; margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .filters-row select {
+    flex: 1; min-width: 120px;
+    font-size: 13px; padding: 9px 12px;
+  }
+  .filter-btn {
+    background: var(--gold2); color: #1A0800;
+    border: none; border-radius: 10px;
+    padding: 9px 16px; cursor: pointer;
+    font-family: var(--font-cond); font-weight: 700;
+    font-size: 12px; letter-spacing: .1em;
+  }
+
+  .ranking-count {
+    font-family: var(--font-cond); font-size: 11px;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted2); margin-bottom: 12px;
+  }
+
+  .place-card {
+    background: linear-gradient(135deg, var(--bg3) 0%, var(--bg2) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .place-card:hover { border-color: var(--border2); }
+
+  .card-top {
+    display: flex; align-items: center;
+    gap: 12px; padding: 14px 16px 10px;
+  }
+  .rank-badge {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-cond); font-weight: 700;
+    font-size: 16px; color: var(--gold); flex-shrink: 0;
+  }
+  .rank-badge.gold {
+    background: linear-gradient(135deg, #8B5E00, #C4860A);
+    border-color: var(--gold); color: #1A0800;
+  }
+  .rank-badge.silver {
+    background: linear-gradient(135deg, #3A3A3A, #707070);
+    border-color: #A0A0A0; color: #E0E0E0;
+  }
+  .rank-badge.bronze {
+    background: linear-gradient(135deg, #5A3010, #A06030);
+    border-color: #C08050; color: #F0D0A0;
+  }
+
+  .card-info { flex: 1; min-width: 0; }
+  .card-name {
+    font-family: var(--font-disp); font-size: 18px;
+    color: var(--cream); line-height: 1.2;
+  }
+  .card-item {
+    font-family: var(--font-cond); font-size: 11px;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); margin-top: 2px;
+  }
+  .card-score {
+    text-align: right; flex-shrink: 0;
+  }
+  .score-num {
+    font-family: var(--font-disp); font-size: 28px;
+    font-weight: 900; color: var(--gold);
+    line-height: 1;
+  }
+  .score-label {
+    font-family: var(--font-cond); font-size: 10px;
+    letter-spacing: .12em; color: var(--muted2);
+    text-transform: uppercase;
+  }
+
+  .card-bars { padding: 0 16px 14px; }
+  .bar-row {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 5px;
+  }
+  .bar-name {
+    font-family: var(--font-cond); font-size: 10px;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted2); width: 90px; flex-shrink: 0;
+    text-align: right;
+  }
+  .bar-track {
+    flex: 1; height: 5px; background: var(--border);
+    border-radius: 3px; overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--gold2), var(--gold));
+    transition: width .6s ease;
+  }
+  .bar-val {
+    font-family: var(--font-cond); font-size: 11px;
+    color: var(--muted); width: 24px; text-align: right;
+    flex-shrink: 0;
+  }
+  .card-footer {
+    padding: 8px 16px 12px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 16px;
+    font-family: var(--font-cond); font-size: 11px;
+    letter-spacing: .06em; color: var(--muted2);
+  }
+
+  /* Empty / loading */
+  .empty-state {
+    text-align: center; padding: 60px 24px;
+    color: var(--muted2);
+  }
+  .empty-icon { font-size: 52px; display: block; margin-bottom: 12px; }
+  .empty-title { font-size: 18px; font-weight: 600; margin-bottom: 6px; color: var(--muted); }
+  .empty-sub { font-size: 14px; }
+
+  .spinner {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 3px solid var(--border2);
+    border-top-color: var(--gold);
+    animation: spin .8s linear infinite;
+    margin: 60px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Responsive tweaks */
+  @media (max-width: 360px) {
+    .card-name { font-size: 16px; }
+    .score-num { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────── -->
+<header>
+  <div class="header-eyebrow">Ranking Gastronômico</div>
+  <div class="header-title">🧀 Guia de Sabores</div>
+  <div class="header-sub">Avalie, compare e descubra os melhores</div>
+  <span id="saving-indicator">⏳ SALVANDO…</span>
+</header>
+
+<!-- ── NAV ────────────────────────────────────────── -->
+<nav>
+  <button class="active" data-view="ranking" onclick="switchView('ranking')">🏆 Ranking</button>
+  <button data-view="form"    onclick="switchView('form')">＋ Avaliar</button>
+</nav>
+
+<!-- ── SETUP BANNER ───────────────────────────────── -->
+<div id="setup-banner">
+  <strong>⚙️ Configuração necessária</strong><br>
+  Cole abaixo a URL do seu Apps Script publicado como Web App:
+  <div id="url-input-wrap">
+    <input type="text" id="script-url-input" placeholder="https://script.google.com/macros/s/…/exec"/>
+    <button id="save-url-btn" onclick="saveScriptUrl()">Salvar</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     VIEW: RANKING
+════════════════════════════════════════════════════ -->
+<div id="view-ranking" class="view active">
+  <div class="ranking-wrap">
+    <div class="filters-row">
+      <select id="filter-item" onchange="loadRanking()">
+        <option value="">Todos os itens</option>
+      </select>
+      <select id="filter-lugar" onchange="loadRanking()">
+        <option value="">Todos os lugares</option>
+      </select>
+    </div>
+    <div id="ranking-count" class="ranking-count"></div>
+    <div id="ranking-list"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     VIEW: FORMULÁRIO
+════════════════════════════════════════════════════ -->
+<div id="view-form" class="view">
+  <div class="form-wrap">
+    <div class="section-title">Nova Avaliação</div>
+
+    <div class="form-group">
+      <label class="field-label">Avaliador <span class="req">*</span></label>
+      <input type="text" id="f-avaliador" placeholder="Seu nome"/>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Nome do Lugar <span class="req">*</span></label>
+      <input type="text" id="f-lugar" placeholder="Ex: Padaria Central"/>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Item <span class="req">*</span></label>
+      <select id="f-item"></select>
+      <div class="add-item-row">
+        <input type="text" id="f-novo-item" placeholder="Adicionar novo item…"/>
+        <button onclick="adicionarNovoItem()">+ Adicionar</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="field-label">Notas de Avaliação <span class="req">*</span></label>
+      <div class="stars-grid">
+        <div class="star-group" id="sg-textura">
+          <div class="star-group-label">Textura</div>
+          <div class="stars" data-field="textura"></div>
+        </div>
+        <div class="star-group" id="sg-sabor">
+          <div class="star-group-label">Sabor</div>
+          <div class="stars" data-field="sabor"></div>
+        </div>
+        <div class="star-group" id="sg-tamanho">
+          <div class="star-group-label">Tamanho</div>
+          <div class="stars" data-field="tamanho"></div>
+        </div>
+        <div class="star-group" id="sg-custo">
+          <div class="star-group-label">Custo Benef.</div>
+          <div class="stars" data-field="custoBeneficio"></div>
+        </div>
+        <div class="star-group" id="sg-preco" style="grid-column:1/-1">
+          <div class="star-group-label">Preço (1=caro · 5=ótimo)</div>
+          <div class="stars" data-field="preco"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="form-error"   class="form-error"   style="display:none"></div>
+    <div id="form-success" class="form-success"  style="display:none"></div>
+
+    <button class="btn-primary" id="submit-btn" onclick="submitForm()">
+      Salvar Avaliação
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════════════ -->
+<script>
+// ── State ─────────────────────────────────────────────────────
+const STORAGE_KEY = "gastro_script_url";
+let scriptUrl = localStorage.getItem(STORAGE_KEY) || "";
+let ratings   = { textura: 0, sabor: 0, tamanho: 0, custoBeneficio: 0, preco: 0 };
+let itens     = [];
+let rankingData = [];
+
+// ── Init ──────────────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  initSetupBanner();
+  initStars();
+  if (scriptUrl) {
+    loadItens();
+    loadRanking();
+  }
+});
+
+function initSetupBanner() {
+  const banner = document.getElementById("setup-banner");
+  if (scriptUrl) {
+    document.getElementById("script-url-input").value = scriptUrl;
+    banner.style.display = "none";
+  }
+}
+
+function saveScriptUrl() {
+  const val = document.getElementById("script-url-input").value.trim();
+  if (!val.startsWith("https://")) { alert("URL inválida."); return; }
+  scriptUrl = val;
+  localStorage.setItem(STORAGE_KEY, scriptUrl);
+  document.getElementById("setup-banner").style.display = "none";
+  loadItens();
+  loadRanking();
+}
+
+// ── Stars ─────────────────────────────────────────────────────
+function initStars() {
+  document.querySelectorAll(".stars").forEach(container => {
+    const field = container.dataset.field;
+    for (let i = 1; i <= 5; i++) {
+      const s = document.createElement("span");
+      s.className = "star";
+      s.textContent = "★";
+      s.dataset.val = i;
+      s.onclick = () => setRating(field, i);
+      s.onmouseenter = () => previewRating(field, i);
+      s.onmouseleave = () => previewRating(field, ratings[field]);
+      container.appendChild(s);
+    }
+  });
+}
+
+function setRating(field, val) {
+  ratings[field] = val;
+  previewRating(field, val);
+}
+
+function previewRating(field, val) {
+  const container = document.querySelector(`.stars[data-field="${field}"]`);
+  container.querySelectorAll(".star").forEach((s, i) => {
+    s.classList.toggle("on", i < val);
+  });
+}
+
+// ── API calls ─────────────────────────────────────────────────
+function saving(on) {
+  document.getElementById("saving-indicator").classList.toggle("show", on);
+}
+
+async function api(action, body = {}) {
+  if (!scriptUrl) return null;
+  saving(true);
+  try {
+    const res = await fetch(scriptUrl, {
+      method: "POST",
+      body: JSON.stringify({ action, ...body }),
+    });
+    return await res.json();
+  } catch(e) {
+    console.error(e);
+    return { error: e.message };
+  } finally {
+    saving(false);
+  }
+}
+
+// ── Itens (dropdown) ──────────────────────────────────────────
+async function loadItens() {
+  const data = await api("getItens");
+  if (!data || data.error) return;
+  itens = data.itens || [];
+  renderItensDropdown();
+  renderFilterItem();
+}
+
+function renderItensDropdown() {
+  const sel = document.getElementById("f-item");
+  sel.innerHTML = itens.map(i => `<option value="${esc(i)}">${esc(i)}</option>`).join("");
+}
+
+function renderFilterItem() {
+  const sel = document.getElementById("filter-item");
+  sel.innerHTML = `<option value="">Todos os itens</option>` +
+    itens.map(i => `<option value="${esc(i)}">${esc(i)}</option>`).join("");
+}
+
+async function adicionarNovoItem() {
+  const input = document.getElementById("f-novo-item");
+  const item  = input.value.trim();
+  if (!item) return;
+  const data = await api("addItem", { item });
+  if (!data || data.error) { alert("Erro ao adicionar item."); return; }
+  input.value = "";
+  if (!itens.includes(item)) itens.push(item);
+  renderItensDropdown();
+  renderFilterItem();
+  document.getElementById("f-item").value = item;
+}
+
+// ── Ranking ───────────────────────────────────────────────────
+async function loadRanking() {
+  const list = document.getElementById("ranking-list");
+  list.innerHTML = `<div class="spinner"></div>`;
+
+  const filtroItem  = document.getElementById("filter-item").value;
+  const filtroLugar = document.getElementById("filter-lugar").value;
+
+  const data = await api("getRanking", { item: filtroItem, lugar: filtroLugar });
+
+  if (!data) { list.innerHTML = renderEmpty("⚙️", "Configure o script acima", ""); return; }
+  if (data.error) { list.innerHTML = renderEmpty("❌", "Erro ao carregar", data.error); return; }
+
+  rankingData = data.ranking || [];
+  renderRanking(rankingData);
+  updateLugarFilter(rankingData);
+}
+
+function renderRanking(rows) {
+  const list  = document.getElementById("ranking-list");
+  const count = document.getElementById("ranking-count");
+  count.textContent = `${rows.length} resultado${rows.length !== 1 ? "s" : ""}`;
+
+  if (rows.length === 0) {
+    list.innerHTML = renderEmpty("🫙", "Nenhuma avaliação ainda", "Seja o primeiro a avaliar!");
+    return;
+  }
+
+  const medals = ["gold","silver","bronze"];
+  list.innerHTML = rows.map((r, i) => `
+    <div class="place-card">
+      <div class="card-top">
+        <div class="rank-badge ${medals[i] || ""}">
+          ${i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : i + 1}
+        </div>
+        <div class="card-info">
+          <div class="card-name">${esc(r.lugar)}</div>
+          <div class="card-item">${esc(r.item)}</div>
+        </div>
+        <div class="card-score">
+          <div class="score-num">${r.media.toFixed(1)}</div>
+          <div class="score-label">/ 5</div>
+        </div>
+      </div>
+      <div class="card-bars">
+        ${barRow("Textura", r.textura)}
+        ${barRow("Sabor", r.sabor)}
+        ${barRow("Tamanho", r.tamanho)}
+        ${barRow("Custo Ben.", r.custoBeneficio)}
+        ${barRow("Preço", r.preco)}
+      </div>
+      <div class="card-footer">
+        <span>📝 ${r.contagem} avaliação${r.contagem !== 1 ? "ões" : ""}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function barRow(label, val) {
+  const pct = (val / 5 * 100).toFixed(0);
+  return `
+    <div class="bar-row">
+      <span class="bar-name">${label}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <span class="bar-val">${val.toFixed(1)}</span>
+    </div>`;
+}
+
+function updateLugarFilter(rows) {
+  const lugares = [...new Set(rows.map(r => r.lugar))].sort();
+  const sel = document.getElementById("filter-lugar");
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">Todos os lugares</option>` +
+    lugares.map(l => `<option value="${esc(l)}" ${l === cur ? "selected" : ""}>${esc(l)}</option>`).join("");
+}
+
+// ── Form submit ───────────────────────────────────────────────
+async function submitForm() {
+  hideMessages();
+  const avaliador = document.getElementById("f-avaliador").value.trim();
+  const lugar     = document.getElementById("f-lugar").value.trim();
+  const item      = document.getElementById("f-item").value;
+
+  if (!avaliador) { showError("Informe seu nome."); return; }
+  if (!lugar)     { showError("Informe o nome do lugar."); return; }
+  if (!item)      { showError("Selecione um item."); return; }
+
+  const fields = ["textura","sabor","tamanho","custoBeneficio","preco"];
+  for (const f of fields) {
+    if (!ratings[f]) { showError(`Dê uma nota para ${f}.`); return; }
+  }
+
+  const btn = document.getElementById("submit-btn");
+  btn.disabled = true;
+
+  const data = await api("addAvaliacao", { avaliador, lugar, item, ...ratings });
+
+  btn.disabled = false;
+  if (!data || data.error) { showError("Erro ao salvar: " + (data && data.error)); return; }
+
+  showSuccess(`✅ Avaliação salva! Média: ${Number(data.media).toFixed(1)} ⭐`);
+  resetForm();
+  loadRanking();
+}
+
+function resetForm() {
+  document.getElementById("f-avaliador").value = "";
+  document.getElementById("f-lugar").value = "";
+  ratings = { textura: 0, sabor: 0, tamanho: 0, custoBeneficio: 0, preco: 0 };
+  Object.keys(ratings).forEach(f => previewRating(f, 0));
+}
+
+// ── Nav ───────────────────────────────────────────────────────
+function switchView(name) {
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+  document.getElementById("view-" + name).classList.add("active");
+  document.querySelector(`nav button[data-view="${name}"]`).classList.add("active");
+  if (name === "ranking") loadRanking();
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function esc(str) {
+  return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function showError(msg) {
+  const el = document.getElementById("form-error");
+  el.textContent = "⚠ " + msg; el.style.display = "block";
+}
+function showSuccess(msg) {
+  const el = document.getElementById("form-success");
+  el.textContent = msg; el.style.display = "block";
+}
+function hideMessages() {
+  document.getElementById("form-error").style.display = "none";
+  document.getElementById("form-success").style.display = "none";
+}
+function renderEmpty(icon, title, sub) {
+  return `<div class="empty-state">
+    <span class="empty-icon">${icon}</span>
+    <div class="empty-title">${title}</div>
+    <div class="empty-sub">${sub}</div>
+  </div>`;
+}
+</script>
+</body>
+</html>
