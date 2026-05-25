@@ -422,6 +422,10 @@
     <div class="form-group">
       <label class="field-label">Notas de Avaliação <span class="req">*</span></label>
       <div class="stars-grid">
+        <div class="star-group" id="sg-aroma">
+          <div class="star-group-label">Aroma</div>
+          <div class="stars" data-field="aroma"></div>
+        </div>
         <div class="star-group" id="sg-textura">
           <div class="star-group-label">Textura</div>
           <div class="stars" data-field="textura"></div>
@@ -430,17 +434,13 @@
           <div class="star-group-label">Sabor</div>
           <div class="stars" data-field="sabor"></div>
         </div>
-        <div class="star-group" id="sg-tamanho">
-          <div class="star-group-label">Tamanho</div>
-          <div class="stars" data-field="tamanho"></div>
+        <div class="star-group" id="sg-consistencia">
+          <div class="star-group-label">Consistência</div>
+          <div class="stars" data-field="consistencia"></div>
         </div>
-        <div class="star-group" id="sg-custo">
-          <div class="star-group-label">Custo Benef.</div>
-          <div class="stars" data-field="custoBeneficio"></div>
-        </div>
-        <div class="star-group" id="sg-preco" style="grid-column:1/-1">
-          <div class="star-group-label">Preço (1=caro · 5=ótimo)</div>
-          <div class="stars" data-field="preco"></div>
+        <div class="star-group" id="sg-extra" style="grid-column:1/-1">
+          <div class="star-group-label">Extra (impressão geral)</div>
+          <div class="stars" data-field="extra"></div>
         </div>
       </div>
     </div>
@@ -461,7 +461,7 @@
 // ── State ─────────────────────────────────────────────────────
 const STORAGE_KEY = "gastro_script_url";
 let scriptUrl = localStorage.getItem(STORAGE_KEY) || "";
-let ratings   = { textura: 0, sabor: 0, tamanho: 0, custoBeneficio: 0, preco: 0 };
+let ratings   = { aroma: 0, textura: 0, sabor: 0, consistencia: 0, extra: 0 };
 let itens     = [];
 let rankingData = [];
 
@@ -622,11 +622,11 @@ function renderRanking(rows) {
         </div>
       </div>
       <div class="card-bars">
+        ${barRow("Aroma", r.aroma)}
         ${barRow("Textura", r.textura)}
         ${barRow("Sabor", r.sabor)}
-        ${barRow("Tamanho", r.tamanho)}
-        ${barRow("Custo Ben.", r.custoBeneficio)}
-        ${barRow("Preço", r.preco)}
+        ${barRow("Consistência", r.consistencia)}
+        ${barRow("Extra", r.extra)}
       </div>
       <div class="card-footer">
         <span>📝 ${r.contagem} avaliação${r.contagem !== 1 ? "ões" : ""}</span>
@@ -664,7 +664,7 @@ async function submitForm() {
   if (!lugar)     { showError("Informe o nome do lugar."); return; }
   if (!item)      { showError("Selecione um item."); return; }
 
-  const fields = ["textura","sabor","tamanho","custoBeneficio","preco"];
+  const fields = ["aroma","textura","sabor","consistencia","extra"];
   for (const f of fields) {
     if (!ratings[f]) { showError(`Dê uma nota para ${f}.`); return; }
   }
@@ -685,7 +685,7 @@ async function submitForm() {
 function resetForm() {
   document.getElementById("f-avaliador").value = "";
   document.getElementById("f-lugar").value = "";
-  ratings = { textura: 0, sabor: 0, tamanho: 0, custoBeneficio: 0, preco: 0 };
+  ratings = { aroma: 0, textura: 0, sabor: 0, consistencia: 0, extra: 0 };
   Object.keys(ratings).forEach(f => previewRating(f, 0));
 }
 
