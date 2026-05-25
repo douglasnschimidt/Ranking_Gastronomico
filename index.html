@@ -401,7 +401,7 @@
     <div class="section-title">Nova Avaliação</div>
 
     <div class="form-group">
-      <label class="field-label">Avaliador <span class="req">*</span></label>
+      <label class="field-label">Avaliador</label>
       <input type="text" id="f-avaliador" placeholder="Seu nome"/>
     </div>
 
@@ -660,7 +660,6 @@ async function submitForm() {
   const lugar     = document.getElementById("f-lugar").value.trim();
   const item      = document.getElementById("f-item").value;
 
-  if (!avaliador) { showError("Informe seu nome."); return; }
   if (!lugar)     { showError("Informe o nome do lugar."); return; }
   if (!item)      { showError("Selecione um item."); return; }
 
