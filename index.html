@@ -30,7 +30,7 @@
     --btn2:      #CEC080;
     --ink:       #242430;
     --muted:     #6A6A78;
-    --muted2:    #242430;
+    --muted2:    #9A9AA8;
     --font:      'LetraArtista', 'Courier New', monospace;
     --font-title: 'Toystory', 'Courier New', monospace;
     --radius:    4px;
@@ -446,8 +446,8 @@
           <div class="stars" data-field="sabor"></div>
         </div>
         <div class="star-group" id="sg-consistencia">
-          <div class="star-group-label">Consistência</div>
-          <div class="stars" data-field="consistencia"></div>
+          <div class="star-group-label">Apresentação</div>
+          <div class="stars" data-field="apresentacao"></div>
         </div>
         <div class="star-group" id="sg-extra" style="grid-column:1/-1">
           <div class="star-group-label">Extra (impressão geral)</div>
@@ -472,7 +472,7 @@
 // ── State ─────────────────────────────────────────────────────
 const STORAGE_KEY = "gastro_script_url";
 let scriptUrl = localStorage.getItem(STORAGE_KEY) || "";
-let ratings   = { aroma: 0, textura: 0, sabor: 0, consistencia: 0, extra: 0 };
+let ratings   = { aroma: 0, textura: 0, sabor: 0, apresentacao: 0, extra: 0 };
 let itens     = [];
 let rankingData = [];
 
@@ -636,7 +636,7 @@ function renderRanking(rows) {
         ${barRow("Aroma", r.aroma)}
         ${barRow("Textura", r.textura)}
         ${barRow("Sabor", r.sabor)}
-        ${barRow("Consistência", r.consistencia)}
+        ${barRow("Apresentação", r.apresentacao)}
         ${barRow("Extra", r.extra)}
       </div>
       <div class="card-footer">
@@ -674,7 +674,7 @@ async function submitForm() {
   if (!lugar)     { showError("Informe o nome do lugar."); return; }
   if (!item)      { showError("Selecione um item."); return; }
 
-  const fields = ["aroma","textura","sabor","consistencia","extra"];
+  const fields = ["aroma","textura","sabor","apresentacao","extra"];
   for (const f of fields) {
     if (!ratings[f]) { showError(`Dê uma nota para ${f}.`); return; }
   }
@@ -695,7 +695,7 @@ async function submitForm() {
 function resetForm() {
   document.getElementById("f-avaliador").value = "";
   document.getElementById("f-lugar").value = "";
-  ratings = { aroma: 0, textura: 0, sabor: 0, consistencia: 0, extra: 0 };
+  ratings = { aroma: 0, textura: 0, sabor: 0, apresentacao: 0, extra: 0 };
   Object.keys(ratings).forEach(f => previewRating(f, 0));
 }
 
