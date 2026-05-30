@@ -165,13 +165,13 @@
   .stars-row { display: flex; gap: 4px; flex-wrap: wrap; }
   .star-group { margin-bottom: 14px; }
   .star-group-label {
-    font-family: var(--font); font-size: 10px;
+    font-family: var(--font); font-size: 13px;
     letter-spacing: .15em; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 4px;
+    color: var(--muted); margin-bottom: 6px;
   }
   .stars { display: flex; gap: 3px; }
   .star {
-    font-size: 26px; cursor: pointer;
+    font-size: 38px; cursor: pointer;
     color: var(--border);
     transition: color .1s, transform .1s;
     line-height: 1; user-select: none;
@@ -180,13 +180,13 @@
   .star:hover { transform: scale(1.15); }
 
   .stars-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
     background: var(--bg3);
     border: 2px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px;
+    padding: 16px;
     margin-bottom: 16px;
   }
 
@@ -449,7 +449,7 @@
           <div class="star-group-label">Apresentação</div>
           <div class="stars" data-field="apresentacao"></div>
         </div>
-        <div class="star-group" id="sg-extra" style="grid-column:1/-1">
+        <div class="star-group" id="sg-extra">
           <div class="star-group-label">Extra (impressão geral)</div>
           <div class="stars" data-field="extra"></div>
         </div>
