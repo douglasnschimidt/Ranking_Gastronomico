@@ -55,10 +55,23 @@
   /* ── Header ──────────────────────────────────────────── */
   header {
     background: var(--yellow);
-    padding: 22px 20px 18px;
+    padding: 14px 20px 14px;
     border-bottom: 3px solid var(--border2);
     position: sticky; top: 0; z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+  }
+
   .header-eyebrow {
     font-family: var(--font);
     font-size: 10px; letter-spacing: .3em;
@@ -75,8 +88,21 @@
     font-size: 12px; color: var(--ink);
     margin-top: 4px; letter-spacing: .05em;
   }
+
+  .header-image {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+  }
+  .header-image img {
+    height: 72px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+  }
+
   #saving-indicator {
-    position: absolute; top: 18px; right: 18px;
+    position: absolute; top: 10px; right: 18px;
     font-family: var(--font); font-size: 10px;
     letter-spacing: .12em; color: var(--ink);
     display: none;
