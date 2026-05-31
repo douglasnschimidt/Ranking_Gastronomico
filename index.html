@@ -10,15 +10,11 @@
   src: url('DnsToystory-Regular.woff2') format('woff2');
   font-weight: normal; font-style: normal;
 }
-  /* DnsToystory-Regular.woff2*/
-  /* src: url('LapisDeArtista-Regular.ttf') format('truetype'); */
 @font-face {
   font-family: 'LetraArtista';
   src: url('LapisDeArtista-Regular.woff2') format('woff2');
   font-weight: normal; font-style: normal;
 }
-  /* DnsLetraDeArtista-Regular.woff2 */
-  /* ── Reset & Variables ───────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
@@ -190,7 +186,6 @@
   select { appearance: none; }
   textarea { min-height: 0; resize: none; }
 
-  /* Star rating */
   .stars-row { display: flex; gap: 4px; flex-wrap: wrap; }
   .star-group { margin-bottom: 14px; }
   .star-group-label {
@@ -219,7 +214,6 @@
     margin-bottom: 16px;
   }
 
-  /* Add item inline */
   .add-item-row { display: flex; gap: 8px; margin-top: 8px; }
   .add-item-row input { flex: 1; font-size: 13px; padding: 8px 11px; }
   .add-item-row button {
@@ -231,7 +225,6 @@
     text-transform: uppercase;
   }
 
-  /* Submit button */
   .btn-primary {
     width: 100%; padding: 14px;
     background: var(--btn);
@@ -368,7 +361,6 @@
     text-transform: uppercase;
   }
 
-  /* Empty / loading */
   .empty-state { text-align: center; padding: 60px 24px; color: var(--muted2); }
   .empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
   .empty-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; color: var(--muted); font-family: var(--font-title); text-transform: uppercase; letter-spacing: .08em; }
@@ -386,6 +378,8 @@
   @media (max-width: 360px) {
     .card-name { font-size: 14px; }
     .score-num { font-size: 22px; }
+    .header-image img { height: 56px; }
+    .header-title { font-size: 20px; }
   }
 </style>
 </head>
@@ -393,9 +387,14 @@
 
 <!-- ── HEADER ──────────────────────────────────────── -->
 <header>
-  <div class="header-eyebrow">Ranking Gastronômico</div>
-  <div class="header-title">🧀 Guia de Sabores</div>
-  <div class="header-sub">Avalie, compare e descubra os melhores</div>
+  <div class="header-left">
+    <div class="header-eyebrow">Ranking Gastronômico</div>
+    <div class="header-title">🧀 Guia de Sabores</div>
+    <div class="header-sub">Avalie, compare e descubra os melhores</div>
+  </div>
+  <div class="header-image">
+    <img src="GARFO top1.png" alt="Garfo"/>
+  </div>
   <span id="saving-indicator">⏳ SALVANDO…</span>
 </header>
 
@@ -494,18 +493,13 @@
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════
-     JAVASCRIPT
-════════════════════════════════════════════════════ -->
 <script>
-// ── State ─────────────────────────────────────────────────────
 const STORAGE_KEY = "gastro_script_url";
 let scriptUrl = localStorage.getItem(STORAGE_KEY) || "";
 let ratings   = { aroma: 0, textura: 0, sabor: 0, apresentacao: 0, extra: 0 };
 let itens     = [];
 let rankingData = [];
 
-// ── Init ──────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", () => {
   initSetupBanner();
   initStars();
@@ -533,7 +527,6 @@ function saveScriptUrl() {
   loadRanking();
 }
 
-// ── Stars ─────────────────────────────────────────────────────
 function initStars() {
   document.querySelectorAll(".stars").forEach(container => {
     const field = container.dataset.field;
@@ -562,7 +555,6 @@ function previewRating(field, val) {
   });
 }
 
-// ── API calls ─────────────────────────────────────────────────
 function saving(on) {
   document.getElementById("saving-indicator").classList.toggle("show", on);
 }
@@ -584,7 +576,6 @@ async function api(action, body = {}) {
   }
 }
 
-// ── Itens (dropdown) ──────────────────────────────────────────
 async function loadItens() {
   const data = await api("getItens");
   if (!data || data.error) return;
@@ -617,7 +608,6 @@ async function adicionarNovoItem() {
   document.getElementById("f-item").value = item;
 }
 
-// ── Ranking ───────────────────────────────────────────────────
 async function loadRanking() {
   const list = document.getElementById("ranking-list");
   list.innerHTML = `<div class="spinner"></div>`;
@@ -693,7 +683,6 @@ function updateLugarFilter(rows) {
     lugares.map(l => `<option value="${esc(l)}" ${l === cur ? "selected" : ""}>${esc(l)}</option>`).join("");
 }
 
-// ── Form submit ───────────────────────────────────────────────
 async function submitForm() {
   hideMessages();
   const avaliador = document.getElementById("f-avaliador").value.trim();
@@ -728,7 +717,6 @@ function resetForm() {
   Object.keys(ratings).forEach(f => previewRating(f, 0));
 }
 
-// ── Nav ───────────────────────────────────────────────────────
 function switchView(name) {
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
@@ -737,7 +725,6 @@ function switchView(name) {
   if (name === "ranking") loadRanking();
 }
 
-// ── Helpers ───────────────────────────────────────────────────
 function esc(str) {
   return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
