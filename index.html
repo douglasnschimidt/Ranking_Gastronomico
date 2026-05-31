@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
-<title>Ranking Gastronômico 🧀</title>
+<title>Ranking Gastronômico</title>
 <style>
 @font-face {
   font-family: 'Toystory';
@@ -91,7 +91,7 @@
     align-items: right;
   }
   .header-image img {
-    height: 72px;
+    height: 82px;
     width: auto;
     object-fit: contain;
     display: block;
@@ -389,8 +389,8 @@
 <header>
   <div class="header-left">
     <div class="header-eyebrow">Ranking Gastronômico</div>
-    <div class="header-title">🧀 Guia de Sabores</div>
-    <div class="header-sub">Avalie, compare e descubra os melhores</div>
+    <div class="header-title">Top do Garfo</div>
+    <div class="header-sub">Avalie e descubra os melhores</div>
   </div>
   <div class="header-image">
     <img src="GARFO top1.png" alt="Garfo"/>
@@ -659,7 +659,7 @@ function renderRanking(rows) {
         ${barRow("Extra", r.extra)}
       </div>
       <div class="card-footer">
-        <span>📝 ${r.contagem} avaliação${r.contagem !== 1 ? "ões" : ""}</span>
+        <span>📝 ${r.contagem} ${r.contagem !== 1 ? "avaliações" : "avaliação"}</span>
       </div>
     </div>
   `).join("");
